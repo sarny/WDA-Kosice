@@ -18,11 +18,11 @@ print("model loaded")
 
 # Inicializacia formularu pre vyplnenie hodnot atributov
 class theForm(Form):
-    param1 = DecimalField(label='Sepal Length (cm):', places=2, validators=[Required()])
+    param1 = DecimalField( ='Sepal Length (cm):', places=2, validators=[Required()])
     param2 = DecimalField(label='Sepal Width (cm):', places=2, validators=[Required()])
     param3 = DecimalField(label='Petal Length (cm):', places=2, validators=[Required()])
     param4 = DecimalField(label='Petal Width (cm):', places=2, validators=[Required()])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Predikuj!')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -30,11 +30,12 @@ def home():
     print(session)
     form = theForm(csrf_enabled=False)
     if form.validate_on_submit():  # ked klineme na submit:
-        # zoberieme vyplneneh hodnoty z policok
+        # zoberieme vyplnene hodnoty z policok
         session['sepal_length'] = form.param1.data
         session['sepal_width'] = form.param2.data
         session['petal_length'] = form.param3.data
         session['petal_width'] = form.param4.data
+        
         # transformujeme ich na numpy array, ktoremu rozumie vytvoreny model
         flower_instance = np.array([float(session['sepal_length']), float(session['sepal_width']), float(session['petal_length']),
                            float(session['petal_width'])]).reshape(1,-1)
@@ -43,6 +44,7 @@ def home():
         #flowers = ['setosa', 'versicolor', 'virginica']
         
         #session['prediction'] = flowers[machine_learning_model.predict(flower_instance)[0]]
+        
         session['prediction'] = machine_learning_model.predict(flower_instance)[0]
 
         
